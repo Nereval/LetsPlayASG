@@ -5,9 +5,13 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -29,6 +33,15 @@ public class MainActivity extends Activity {
             team = savedInstanceState.getString("team");
             teamNumber = savedInstanceState.getInt("teamNumber");
         }
+
+        /*
+        Wyświetlenie zdjęcia w nagłówku zrobionego aparatem, nie z galerii
+         */
+        //TODO: Poprawna orientacja zdjęcia zrobionego aparatem
+        ImageView selfieImage = (ImageView)findViewById(R.id.userImage);
+        String image_path = getIntent().getStringExtra("imagePath");
+        Drawable image = Drawable.createFromPath(image_path);
+        selfieImage.setImageDrawable(image);
     }
 
     @Override

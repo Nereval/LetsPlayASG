@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -15,15 +16,18 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -32,8 +36,8 @@ import java.util.Date;
 public class RegistrationActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_LOAD_IMAGE = 2;
     ImageView mImageView;
-    Button photoButton;
     String mCurrentPhotoPath;
 
     @Override
@@ -41,25 +45,63 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         mImageView = (ImageView) findViewById(R.id.obraz);
-        photoButton = (Button) findViewById(R.id.camera);
-        photoButton.setOnClickListener(photoButtonClickListener);
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Button photoButton = (Button) findViewById(R.id.camera);
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
 
+        Button galleryImageButton = (Button) findViewById(R.id.gallery);
+        galleryImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, REQUEST_LOAD_IMAGE);
+            }
+        });
+    }
+    /*
+    Obsługa przycisku "Zatwierdź"
+    Uruchamia MainActivity i przekazuje wpisaną nazwę użytkownika i ścieżkę do zrobionego zdjęcia za pomocą aparatu
+     */
+    public void submitRegistration(View view){
+        EditText text = (EditText)findViewById(R.id.name);
+        String username = text.getText().toString();
+        Intent submitIntent = new Intent(this, MainActivity.class);
+        submitIntent.putExtra("imagePath", mCurrentPhotoPath);
+        submitIntent.putExtra("username", username);
+        startActivity(submitIntent);
     }
 
-    Button.OnClickListener photoButtonClickListener = new Button.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            takePicture();
+    /*
+    metoda wywołana po zakończeniu aktywności rozpoczętej przez startActivityForResult:
+    1) uruchamia metodę setPic(), która zajmuje się zwróconym obrazem po zrobieniu zdjęcia
+    2) ustawia wybrany obraz z galerii w ImageView
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (mCurrentPhotoPath != null) {
+                setPic();
+               // mCurrentPhotoPath = null;
+            }
         }
-    };
-
+        if (requestCode == REQUEST_LOAD_IMAGE && resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            //TODO: Wyświetlanie zdjęcia wybranego z galerii.
+            //mCurrentPhotoPath = selectedImage.getPath();
+            mImageView.setImageURI(selectedImage);
+        }
+    }
 
     /*
-    takePicture() - metoda wywołana po wciśnięciu przycisku "Kamera"
-    uruchamia domyślną aplikację aparatu w celu zrobienia zdjęcia profilowego
-     */
+takePicture() - metoda wywołana po wciśnięciu przycisku "Kamera"
+uruchamia domyślną aplikację aparatu w celu zrobienia zdjęcia profilowego
+ */
     Uri photoURI;
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -83,21 +125,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         }
     }
-
-    /*
-    metoda wywołana po zakończeniu aktywności rozpoczętej przez startActivityForResult(...)
-    uruchamia metodę setPic(), która zajmuje się zwróconym obrazem
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            if (mCurrentPhotoPath != null) {
-                setPic();
-                mCurrentPhotoPath = null;
-            }
-        }
-    }
-
     /*
     createImageFile - tworzy plik w formacie jpg do zapisu zdjęcia
     o unikalnej nazwię przy wykorzystaniu obecnej daty i czasu
