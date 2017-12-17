@@ -22,7 +22,9 @@ public class MainActivity extends Activity {
     private String username;
     private int teamNumber;
     private String team;
-
+/*
+siema kura co tam
+ */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
