@@ -5,8 +5,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 public class LoggingActivity extends Activity {
+
+    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +34,18 @@ public class LoggingActivity extends Activity {
 
     public void onLoginClick(View view){
         //Jeżeli weryfikacja konta przebiegła pomyślnie
-        EditText text = (EditText) findViewById(R.id.username);
-        String username = text.getText().toString();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+        EditText name = (EditText) findViewById(R.id.username);
+        EditText pass = (EditText) findViewById(R.id.password);
+        String username = name.getText().toString();
+        String password = pass.getText().toString();
+
+       // Toast.makeText(this, "Signing up...", Toast.LENGTH_SHORT).show();
+        //new RegisterConnectionActivity(this).execute(username, password);
+
+
+        //Intent intent = new Intent(this, MainActivity.class);
+       // intent.putExtra("username", username);
+       // startActivity(intent);
     }
 
     public void onRegisterClick(View view){

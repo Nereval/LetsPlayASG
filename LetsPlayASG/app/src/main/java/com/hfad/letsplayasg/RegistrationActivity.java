@@ -3,20 +3,16 @@ Autor: pchor. Piotr Czyżak
  */
 package com.hfad.letsplayasg;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -25,9 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -37,6 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_LOAD_IMAGE = 2;
+    static boolean registerStatus = false;
     ImageView mImageView;
     String mCurrentPhotoPath;
 
@@ -68,14 +65,24 @@ public class RegistrationActivity extends AppCompatActivity {
     Uruchamia MainActivity i przekazuje wpisaną nazwę użytkownika i ścieżkę do zrobionego zdjęcia za pomocą aparatu
      */
     public void submitRegistration(View view){
-        EditText text = (EditText)findViewById(R.id.name);
-        String username = text.getText().toString();
-        Intent submitIntent = new Intent(this, MainActivity.class);
-        submitIntent.putExtra("imagePath", mCurrentPhotoPath);
-        submitIntent.putExtra("username", username);
-        startActivity(submitIntent);
+        EditText name = (EditText)findViewById(R.id.name);
+        EditText pass = (EditText)findViewById(R.id.password);
+        String username = name.getText().toString();
+        String password = pass.getText().toString();
+
+        Toast.makeText(this, "Signing up...", Toast.LENGTH_SHORT).show();
+        AsyncTask<String, Void, String> task = new RegisterConnectionActivity(this).execute(username, password);
+
+
+            Intent submitIntent = new Intent(this, MainActivity.class);
+            submitIntent.putExtra("imagePath", mCurrentPhotoPath);
+            submitIntent.putExtra("username", username);
+            startActivity(submitIntent);
     }
 
+    public static void setStatus(boolean status){
+        registerStatus = status;
+    }
     /*
     metoda wywołana po zakończeniu aktywności rozpoczętej przez startActivityForResult:
     1) uruchamia metodę setPic(), która zajmuje się zwróconym obrazem po zrobieniu zdjęcia
@@ -185,7 +192,7 @@ uruchamia domyślną aplikację aparatu w celu zrobienia zdjęcia profilowego
     pomimo zrobienia zdjęcia pionowo, jest ono obrócone poziomo.
     rotateImageIfReguired obraca obraz z powrotem do oryginalnej orientacji.
      */
-    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+    public static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
 
         InputStream input = context.getContentResolver().openInputStream(selectedImage);
         ExifInterface ei;
