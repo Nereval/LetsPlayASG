@@ -1,7 +1,6 @@
 package com.hfad.letsplayasg;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -21,15 +20,13 @@ import java.net.URLEncoder;
 public class RegisterConnectionActivity extends AsyncTask<String, Void, String> {
 
     private Context context;
-    private int status = 0 ;
 
     public RegisterConnectionActivity(Context context) {
-
         this.context = context;
     }
 
     protected void onPreExecute() {
-    super.onPreExecute();
+
     }
 
     @Override
@@ -67,14 +64,11 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
                 String query_result = jsonObj.getString("query_result");
                 if (query_result.equals("SUCCESS")) {
                     Toast.makeText(context, "Registration successful.", Toast.LENGTH_SHORT).show();
-                    status = 1;
-
+                  
                 } else if (query_result.equals("FAILURE")) {
                     Toast.makeText(context, "Registration failed.", Toast.LENGTH_SHORT).show();
-                    status = 2;
                 } else {
                     Toast.makeText(context, "Couldn't connect to remote database.", Toast.LENGTH_SHORT).show();
-                    status = 3;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -82,15 +76,6 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
             }
         } else {
             Toast.makeText(context, "Couldn't get any JSON data.", Toast.LENGTH_SHORT).show();
-        }
-
-        if (status == 0){
-            //do something
-        } else if (status == 1) {
-            Intent mapIntent = new Intent(context, MainActivity.class);
-            context.startActivity(mapIntent);
-        } else if (status == 2){
-            // do something
         }
     }
 }
