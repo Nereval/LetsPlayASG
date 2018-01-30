@@ -1,6 +1,7 @@
 package com.hfad.letsplayasg;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import java.net.URLEncoder;
 public class RegisterConnectionActivity extends AsyncTask<String, Void, String> {
 
     private Context context;
+    private int status = 0;
 
     public RegisterConnectionActivity(Context context) {
         this.context = context;
@@ -76,6 +78,15 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
             }
         } else {
             Toast.makeText(context, "Couldn't get any JSON data.", Toast.LENGTH_SHORT).show();
+        }
+
+        if (status == 0){
+            //do something
+        } else if (status == 1) {
+            Intent mapIntent = new Intent(context, MainActivity.class);
+            context.startActivity(mapIntent);
+        } else if (status == 2){
+            // do something
         }
     }
 }
