@@ -15,21 +15,21 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by Piotrek on 20.01.2018.
+ * Created by Piotrek on 30.01.2018.
  */
 
-public class RegisterConnectionActivity extends AsyncTask<String, Void, String> {
+public class LoginConnection extends AsyncTask<String, Void, String> {
 
     private Context context;
     private int status = 0 ;
 
-    public RegisterConnectionActivity(Context context) {
+    public LoginConnection(Context context) {
 
         this.context = context;
     }
 
     protected void onPreExecute() {
-    super.onPreExecute();
+        //super.onPreExecute();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
             data = "?username=" + URLEncoder.encode(username, "UTF-8");
             data += "&password=" + URLEncoder.encode(password, "UTF-8");
 
-            link = "http://pzasg.j.pl/register.php" + data;
+            link = "http://pzasg.j.pl/login.php" + data;
             URL url = new URL(link);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -66,11 +66,11 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
                 JSONObject jsonObj = new JSONObject(jsonStr);
                 String query_result = jsonObj.getString("query_result");
                 if (query_result.equals("SUCCESS")) {
-                    Toast.makeText(context, "Registration successful.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Login successful.", Toast.LENGTH_SHORT).show();
                     status = 1;
 
                 } else if (query_result.equals("FAILURE")) {
-                    Toast.makeText(context, "Registration failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Login failed.", Toast.LENGTH_SHORT).show();
                     status = 2;
                 } else {
                     Toast.makeText(context, "Couldn't connect to remote database.", Toast.LENGTH_SHORT).show();

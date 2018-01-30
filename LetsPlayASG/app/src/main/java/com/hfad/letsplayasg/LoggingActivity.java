@@ -2,6 +2,7 @@ package com.hfad.letsplayasg;
 
 import android.content.Intent;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,8 +11,6 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 public class LoggingActivity extends Activity {
-
-    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +38,9 @@ public class LoggingActivity extends Activity {
         String username = name.getText().toString();
         String password = pass.getText().toString();
 
-       // Toast.makeText(this, "Signing up...", Toast.LENGTH_SHORT).show();
-        //new RegisterConnectionActivity(this).execute(username, password);
+        Toast.makeText(this, "Signing in...", Toast.LENGTH_SHORT).show();
+        AsyncTask<String, Void, String> task = new LoginConnection(this).execute(username, password);
 
-
-        //Intent intent = new Intent(this, MainActivity.class);
-       // intent.putExtra("username", username);
-       // startActivity(intent);
     }
 
     public void onRegisterClick(View view){

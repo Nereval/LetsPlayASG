@@ -73,11 +73,12 @@ public class RegistrationActivity extends AppCompatActivity {
         Toast.makeText(this, "Signing up...", Toast.LENGTH_SHORT).show();
         AsyncTask<String, Void, String> task = new RegisterConnectionActivity(this).execute(username, password);
 
-
-            Intent submitIntent = new Intent(this, MainActivity.class);
-            submitIntent.putExtra("imagePath", mCurrentPhotoPath);
-            submitIntent.putExtra("username", username);
-            startActivity(submitIntent);
+/*
+        Intent submitIntent = new Intent(this, MainActivity.class);
+        submitIntent.putExtra("imagePath", mCurrentPhotoPath);
+        submitIntent.putExtra("username", username);
+        startActivity(submitIntent);
+        */
     }
 
     public static void setStatus(boolean status){
