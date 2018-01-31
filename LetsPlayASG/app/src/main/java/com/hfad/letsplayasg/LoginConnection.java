@@ -20,6 +20,8 @@ import java.net.URLEncoder;
 
 public class LoginConnection extends AsyncTask<String, Void, String> {
 
+    private String username;
+    private String password;
     private Context context;
     private int status = 0 ;
 
@@ -34,28 +36,51 @@ public class LoginConnection extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... arg0) {
-        String username = arg0[0];
-        String password = arg0[1];
+        username = arg0[0];
+        password = arg0[1];
+        String logout = arg0[2];
 
         String link;
         String data;
         BufferedReader bufferedReader;
-        String result;
+        String result = null;
 
-        try {
-            data = "?username=" + URLEncoder.encode(username, "UTF-8");
-            data += "&password=" + URLEncoder.encode(password, "UTF-8");
+        if(username != null && password != null && logout == null) {
+            try {
+                data = "?username=" + URLEncoder.encode(username, "UTF-8");
+                data += "&password=" + URLEncoder.encode(password, "UTF-8");
 
-            link = "http://pzasg.j.pl/login.php" + data;
-            URL url = new URL(link);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                link = "http://pzasg.j.pl/login.php" + data;
+                URL url = new URL(link);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-            bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            result = bufferedReader.readLine();
-            return result;
-        } catch (Exception e) {
-            return new String("Exception: " + e.getMessage());
+                bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                result = bufferedReader.readLine();
+                //return result;
+            } catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+        } else if( username != null && password != null && logout != null){
+            //if (logout == "1"){
+                try {
+                    data = "?username=" + URLEncoder.encode(username, "UTF-8");
+                    data += "&password=" + URLEncoder.encode(password, "UTF-8");
+                    data += "&status=" + URLEncoder.encode("1", "UTF-8");
+
+                    link = "http://pzasg.j.pl/logout.php" + data;
+                    URL url = new URL(link);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    result = bufferedReader.readLine();
+
+                    //return result;
+                } catch (Exception e){
+                    return new String("Exception: " + e.getMessage());
+                }
+           // }
+
         }
+        return result;
     }
 
     @Override
@@ -71,10 +96,13 @@ public class LoginConnection extends AsyncTask<String, Void, String> {
 
                 } else if (query_result.equals("FAILURE")) {
                     Toast.makeText(context, "Login failed.", Toast.LENGTH_SHORT).show();
-                    status = 2;
+                    //status = 2;
+                } else if (query_result.equals("LOGOUT")) {
+                    Toast.makeText(context, "You're logged out!", Toast.LENGTH_SHORT).show();
+                    status = 4;
                 } else {
                     Toast.makeText(context, "Couldn't connect to remote database.", Toast.LENGTH_SHORT).show();
-                    status = 3;
+                    //status = 3;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -87,10 +115,14 @@ public class LoginConnection extends AsyncTask<String, Void, String> {
         if (status == 0){
             //do something
         } else if (status == 1) {
+
             Intent mapIntent = new Intent(context, MapsActivity.class);
+            mapIntent.putExtra("username", username);
+            mapIntent.putExtra("password", password);
             context.startActivity(mapIntent);
-        } else if (status == 2){
-            // do something
+        } else if (status == 4){
+            Intent loginIntent = new Intent(context, LoggingActivity.class);
+            context.startActivity(loginIntent);
         }
     }
 }

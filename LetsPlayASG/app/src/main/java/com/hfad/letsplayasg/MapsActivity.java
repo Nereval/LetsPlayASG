@@ -1,10 +1,12 @@
 package com.hfad.letsplayasg;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -50,6 +52,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     };
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+            String logout = "1";
+            Intent intent = getIntent();
+            String username = intent.getStringExtra("username");
+            String password = intent.getStringExtra("password");
+            Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
+            AsyncTask<String, Void, String> task = new LoginConnection(this).execute(username, password, logout);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -58,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
 
 
     @Override
