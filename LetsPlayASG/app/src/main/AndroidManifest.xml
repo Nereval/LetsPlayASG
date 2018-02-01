@@ -38,19 +38,18 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".LoggingActivity" />
-        <activity
-            android:name=".RegistrationActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoggingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <activity
+            android:name=".RegistrationActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

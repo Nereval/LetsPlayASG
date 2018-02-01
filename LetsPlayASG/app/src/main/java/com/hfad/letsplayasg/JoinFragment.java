@@ -13,11 +13,11 @@ import android.widget.EditText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class JoinTeamFragment extends Fragment {
+public class JoinFragment extends Fragment {
 
     private View viewAll;
 
-    public JoinTeamFragment() {
+    public JoinFragment() {
         // Required empty public constructor
     }
 
@@ -25,24 +25,20 @@ public class JoinTeamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        viewAll = inflater.inflate(R.layout.fragment_join_team,
+        // Inflate the layout for this fragment
+        viewAll = inflater.inflate(R.layout.fragment_join,
                 container, false);
 
-        Button button = (Button) viewAll.findViewById(R.id.joinTeam);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button buttonJoin = (Button) viewAll.findViewById(R.id.joinButton);
+        buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).joinTeam(getInt());
+                EditText number = (EditText) viewAll.findViewById(R.id.joinTeam);
+                ((MapsActivity)getActivity()).joinTeam(Integer.parseInt(number.getText().toString()));
             }
         });
 
         return viewAll;
     }
 
-    public int getInt(){
-        EditText editText = (EditText) viewAll.findViewById(R.id.number);
-        int text = Integer.parseInt(editText.getText().toString());
-        return text;
-    }
 }

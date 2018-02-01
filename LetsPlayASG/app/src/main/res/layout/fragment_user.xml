@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hfad.letsplayasg.MainActivity">
+    tools:context="com.hfad.letsplayasg.UserFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/userImage"
         android:layout_width="40dp"
@@ -19,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/userImage"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="16dp"
         android:textColor="@android:color/black"
         android:text="@string/username" />
@@ -30,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/name"
         android:layout_alignTop="@+id/name"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="36dp"
         android:textColor="@android:color/black"
         android:text="" />
 
@@ -52,12 +51,24 @@
         android:textColor="@android:color/black"
         android:text="" />
 
+    <TextView
+        android:id="@+id/teamNumberText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/team"
+        android:layout_below="@id/team"
+        android:textColor="@android:color/black"
+        android:text="@string/teamNumber" />
 
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/userImage"
-        android:layout_marginTop="20dp" />
+    <TextView
+        android:id="@+id/teamNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/teamName"
+        android:layout_alignLeft="@+id/teamName"
+        android:textColor="@android:color/black"
+        android:text="" />
+
+
 
 </RelativeLayout>

@@ -4,38 +4,50 @@
     android:layout_height="match_parent"
     tools:context="com.hfad.letsplayasg.CreateTeamFragment">
 
-    <LinearLayout
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/teamName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:maxLength="16"
+            android:maxLines="1"
             android:hint="@string/teamName" />
 
         <TextView
+            android:id="@+id/teamNumberText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/yourNumber" />
+            android:layout_toRightOf="@+id/teamName"
+            android:layout_alignTop="@+id/teamName"
+            android:layout_marginLeft="5dp"
+            android:text="@string/yourNumber"/>
 
         <TextView
             android:id="@+id/teamNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="" />
+            android:layout_toRightOf="@+id/teamName"
+            android:layout_alignBottom="@+id/teamName"
+            android:layout_marginLeft="5dp"
+            android:text=""/>
 
         <Button
             android:id="@+id/createTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/createTeam" />
+            android:layout_toRightOf="@+id/teamNumberText"
+            android:layout_alignBottom="@+id/teamNumber"
+            android:layout_marginLeft="5dp"
+            android:text="@string/createTeam"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

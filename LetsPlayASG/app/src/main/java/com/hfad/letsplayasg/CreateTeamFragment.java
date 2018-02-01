@@ -18,8 +18,8 @@ import java.util.Random;
  */
 public class CreateTeamFragment extends Fragment {
 
-    private int teamNumber;
     private View viewAll;
+    private int teamNumber;
 
     public CreateTeamFragment() {
         // Required empty public constructor
@@ -29,7 +29,6 @@ public class CreateTeamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         viewAll = inflater.inflate(R.layout.fragment_create_team,
                 container, false);
 
@@ -47,7 +46,7 @@ public class CreateTeamFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                ((MainActivity)getActivity()).createTeam(teamNumber, getText());
+                //((MapsActivity)getActivity()).createTeam(teamNumber, getText());
             }
         });
 
