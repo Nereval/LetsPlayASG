@@ -12,8 +12,9 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
@@ -45,7 +47,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
 
-    private int teamNumber;
+    private String teamNumber;
+    private String userName;
+    private String teamName;
+    private String userID;
+    private LinkedList<TeamMemberCoords> teamCoordinates = new LinkedList<>();
 
     LocationManager mLocationManager;
 
@@ -79,7 +85,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            //Toast.makeText(getParent().getBaseContext(), "Current location:\n" + location.getLongitude(), Toast.LENGTH_LONG).show();
+           // mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Ja"));
+
+            //AsyncTask<String, Void, String> coords = new TeamMembersConnection((MapsActivity)getBaseContext()).execute(userID, teamNumber);
+
         }
 
         @Override
@@ -102,12 +111,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         super.onBackPressed();
 
-            String logout = "1";
+            //String logout = "1";
             Intent intent = getIntent();
-            String username = intent.getStringExtra("username");
-            String password = intent.getStringExtra("password");
-            Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
-            AsyncTask<String, Void, String> task = new LoginConnection(this).execute(username, password, logout);
+            //String username = intent.getStringExtra("username");
+            String id = intent.getStringExtra("id");
+            //Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
+            AsyncTask<String, Void, String> logout = new LoginConnection(this).execute(null, null, id);
     }
 
     @Override
@@ -118,7 +127,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+/*
+        Intent loginIntent = getIntent();
+        String user = loginIntent.getStringExtra("username");
+        TextView userName = (TextView)findViewById(R.id.username);
+        userName.setText(user);
+*/
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         titles = getResources().getStringArray(R.array.titles);
@@ -144,6 +158,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawerLayout.setDrawerListener(drawerToggle);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 //        getActionBar().setHomeButtonEnabled(true);
+
+        Intent loginIntent = getIntent();
+        String user = loginIntent.getStringExtra("username");
+        userID = loginIntent.getStringExtra("id");
+        //TextView userName = (TextView)findViewById(R.id.username);
+        this.userName = user;
     }
 
     @Override
@@ -170,13 +190,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStart(){
         super.onStart();
         UserFragment userFragment = new UserFragment();
+        userFragment.setUserName(userName);
         replaceFragment(userFragment);
 //        JoinFragment joinFragment = new JoinFragment();
 //        replaceFragment(joinFragment);
 //        CreateTeamFragment createTeamFragment = new CreateTeamFragment();
 //        replaceFragment(createTeamFragment);
     }
-
+/*
     public void joinTeam(int teamNumber){
         this.teamNumber = teamNumber;
         //wyszukuje nazwę teamu
@@ -185,12 +206,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userFragment.setTeamNumber(teamNumber);
         replaceFragment(userFragment);
     }
-
+*/
     public void replaceFragment(Fragment fragment){
         View fragmentContainer = findViewById(R.id.container);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment);
         ft.commit();
+    }
+
+    public String getUserName(){
+        return userName;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public void setTeamCoordinates(LinkedList<TeamMemberCoords> teamCoordinates){
+        this.teamCoordinates = teamCoordinates;
+    }
+
+    public void setTeamNumber(String teamNumber) {
+        this.teamNumber = teamNumber;
     }
 
     @Override
@@ -205,7 +246,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, mLocationListener);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
     }
@@ -224,6 +265,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        AsyncTask<String, Void, String> coords = new TeamMembersConnection(this).execute(userID, teamNumber);
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;

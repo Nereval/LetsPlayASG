@@ -1,6 +1,7 @@
 package com.hfad.letsplayasg;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 public class JoinFragment extends Fragment {
 
     private View viewAll;
+    private String teamName;
 
     public JoinFragment() {
         // Required empty public constructor
@@ -34,11 +36,19 @@ public class JoinFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 EditText number = (EditText) viewAll.findViewById(R.id.joinTeam);
-                ((MapsActivity)getActivity()).joinTeam(Integer.parseInt(number.getText().toString()));
+                String teamNumber = number.getText().toString();
+                ((MapsActivity)getActivity()).setTeamNumber(teamNumber);
+                String userID = ((MapsActivity)getActivity()).getUserID();
+                //((MapsActivity)getActivity()).joinTeam(Integer.parseInt(number.getText().toString()));
+                AsyncTask<String, Void, String> taskkk = new TeamConnection((MapsActivity)getActivity()).execute(userID, teamNumber, null);
+
             }
         });
 
         return viewAll;
     }
 
+    public void setTeamName(String teamName){
+        this.teamName = teamName;
+    }
 }

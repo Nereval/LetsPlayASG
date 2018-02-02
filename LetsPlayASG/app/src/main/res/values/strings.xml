@@ -32,4 +32,5 @@
         <item>Join team</item>
         <item>Help</item>
     </string-array>
+    <string name="title_activity_maps2">Map</string>
 </resources>

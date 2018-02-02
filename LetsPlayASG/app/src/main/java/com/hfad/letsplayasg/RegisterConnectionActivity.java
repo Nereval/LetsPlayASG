@@ -83,7 +83,7 @@ public class RegisterConnectionActivity extends AsyncTask<String, Void, String> 
         if (status == 0){
             //do something
         } else if (status == 1) {
-            Intent mapIntent = new Intent(context, MapsActivity.class);
+            Intent mapIntent = new Intent(context, LoggingActivity.class);
             context.startActivity(mapIntent);
         } else if (status == 2){
             // do something
